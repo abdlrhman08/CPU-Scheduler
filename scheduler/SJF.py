@@ -1,7 +1,9 @@
-from .process import Process
+import copy
+
+from .process import DEBUG, Process
 
 
-def sjf_non_preemptive(processes):
+def sjf_non_preemptive(processes, *args, **kwargs):
     local_processes = processes.copy()
     local_processes.sort(key=lambda process: process.burst_time)
 
@@ -39,13 +41,13 @@ def sjf_non_preemptive(processes):
         total_turnaround_time = sum(process.turnaround_time for process in local_processes)
         avg_waiting_time = total_waiting_time / len(local_processes)
         avg_turnaround_time = total_turnaround_time / len(local_processes)
-    Process.print_process(local_processes, avg_waiting_time, avg_turnaround_time)
-    print(gantt)
+    if DEBUG:
+        Process.print_process(local_processes, avg_waiting_time, avg_turnaround_time)
     return gantt, avg_waiting_time, avg_turnaround_time
 
 
-def sjf_preemptive(processes):
-    local_processes = processes.copy()
+def sjf_preemptive(processes, *args, **kwargs):
+    local_processes = copy.deepcopy(processes)
     local_processes.sort(key=lambda process: process.arrival_time)
 
     current_time = 0
@@ -88,7 +90,8 @@ def sjf_preemptive(processes):
         avg_turnaround_time = total_turnaround_time / len(local_processes)
 
     print(gantt)
-    Process.print_process(local_processes, avg_waiting_time, avg_turnaround_time)
+    if DEBUG:
+        Process.print_process(local_processes, avg_waiting_time, avg_turnaround_time)
     return gantt, avg_waiting_time, avg_turnaround_time
 
 

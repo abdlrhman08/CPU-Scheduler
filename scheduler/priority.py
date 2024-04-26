@@ -1,7 +1,9 @@
-from .process import Process
+import copy
+
+from .process import DEBUG, Process
 
 
-def non_preemptive_priority(processes):
+def non_preemptive_priority(processes, *args, **kwargs):
     gantt = []
     t = 0
     completed = {}
@@ -46,7 +48,8 @@ def non_preemptive_priority(processes):
     if completed:
         avg_waiting_time = sum(process.waiting_time for process in completed.values()) / len(completed)
         avg_turnaround_time = sum(process.turnaround_time for process in completed.values()) / len(completed)
-    Process.print_process(list(completed.values()), avg_waiting_time, avg_turnaround_time)
+    if DEBUG:
+        Process.print_process(list(completed.values()), avg_waiting_time, avg_turnaround_time)
     return gantt, avg_waiting_time, avg_turnaround_time
 
 def preemptive_priority(processes):
@@ -54,7 +57,7 @@ def preemptive_priority(processes):
     gantt = []
     completed = {}
     burst_times = {}
-    local_processes = processes.copy()
+    local_processes = copy.deepcopy(processes)
     for p in local_processes:
         burst_times[p.pid] = p.burst_time
     while local_processes:
@@ -94,7 +97,8 @@ def preemptive_priority(processes):
     if completed:
         avg_waiting_time = sum(process.waiting_time for process in completed.values()) / len(completed)
         avg_turnaround_time = sum(process.turnaround_time for process in completed.values()) / len(completed)
-    Process.print_process(list(completed.values()), avg_waiting_time, avg_turnaround_time)
+    if DEBUG:
+        Process.print_process(list(completed.values()), avg_waiting_time, avg_turnaround_time)
     return gantt, avg_waiting_time, avg_turnaround_time
 
 
